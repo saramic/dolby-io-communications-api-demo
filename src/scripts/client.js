@@ -27,6 +27,7 @@ const main = async () => {
     if (stream.getVideoTracks().length) {
       addVideoNode(participant, stream);
     }
+    addParticipantNode(participant);
   });
   VoxeetSDK.conference.on("streamUpdated", (participant, stream) => {
     if (stream.type === "ScreenShare") return;
@@ -39,6 +40,7 @@ const main = async () => {
   });
   VoxeetSDK.conference.on("streamRemoved", (participant, stream) => {
     removeVideoNode(participant);
+    removeParticipantNode(participant);
   });
 };
 

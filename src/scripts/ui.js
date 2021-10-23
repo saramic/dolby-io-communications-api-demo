@@ -83,3 +83,25 @@ const removeVideoNode = (participant) => {
     videoNode.parentNode.removeChild(videoNode);
   }
 };
+
+const addParticipantNode = (participant) => {
+  const participantsList = document.getElementById("participants-list");
+
+  if (participant.id === VoxeetSDK.session.participant.id) return;
+
+  let participantNode = document.createElement("li");
+  participantNode.setAttribute("id", "participant-" + participant.id);
+  participantNode.innerText = `${participant.info.name}`;
+
+  participantsList.appendChild(participantNode);
+};
+
+const removeParticipantNode = (participant) => {
+  let participantNode = document.getElementById(
+    "participant-" + participant.id
+  );
+
+  if (participantNode) {
+    participantNode.parentNode.removeChild(participantNode);
+  }
+};

@@ -22,13 +22,15 @@ const main = async () => {
   } catch (e) {
     alert("Something went wrong : " + e);
   }
+
   VoxeetSDK.conference.on("streamAdded", (participant, stream) => {
-    if (stream.type === "ScreenShare") return;
+    if (stream.type === "ScreenShare") return addScreenSahreNode(stream);
     if (stream.getVideoTracks().length) {
       addVideoNode(participant, stream);
     }
     addParticipantNode(participant);
   });
+
   VoxeetSDK.conference.on("streamUpdated", (participant, stream) => {
     if (stream.type === "ScreenShare") return;
 
@@ -38,7 +40,10 @@ const main = async () => {
       removeVideoNode(participant);
     }
   });
+
   VoxeetSDK.conference.on("streamRemoved", (participant, stream) => {
+    if (stream.type === "ScreenShare") return removeScreenShareNode();
+
     removeVideoNode(participant);
     removeParticipantNode(participant);
   });

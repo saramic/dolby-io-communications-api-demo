@@ -7,6 +7,9 @@ const initUI = () => {
   const leaveButton = document.getElementById("leave-btn");
   const startVideoBtn = document.getElementById("start-video-btn");
   const stopVideoBtn = document.getElementById("stop-video-btn");
+  const startScreenShareBtn = document.getElementById("start-screenshare-btn");
+  const stopScreenShareBtn = document.getElementById("stop-screenshare-btn");
+
   const conferenceAliasInput = document.getElementById("alias-input");
 
   joinButton.disabled = false;
@@ -20,6 +23,7 @@ const initUI = () => {
         joinButton.disabled = true;
         leaveButton.disabled = false;
         startVideoBtn.disabled = false;
+        startScreenShareBtn.disabled = false;
       })
       .catch((err) => console.error(err));
   };
@@ -30,6 +34,8 @@ const initUI = () => {
       .then(() => {
         joinButton.disabled = false;
         leaveButton.disabled = true;
+        startScreenShareBtn.disabled = true;
+        stopScreenShareBtn.disabled = true;
       })
       .catch((err) => console.error(err));
   };
@@ -50,6 +56,26 @@ const initUI = () => {
       .then(() => {
         startVideoBtn.disabled = false;
         stopVideoBtn.disabled = true;
+      })
+      .catch((err) => console.error(err));
+  };
+
+  startScreenShareBtn.onclick = () => {
+    VoxeetSDK.conference
+      .startScreenShare()
+      .then(() => {
+        startScreenShareBtn.disabled = true;
+        stopScreenShareBtn.disabled = false;
+      })
+      .catch((err) => console.error(err));
+  };
+
+  stopScreenShareBtn.onclick = () => {
+    VoxeetSDK.conference
+      .stopScreenShare()
+      .then(() => {
+        startScreenShareBtn.disabled = false;
+        stopScreenShareBtn.disabled = true;
       })
       .catch((err) => console.error(err));
   };
@@ -103,5 +129,28 @@ const removeParticipantNode = (participant) => {
 
   if (participantNode) {
     participantNode.parentNode.removeChild(participantNode);
+  }
+};
+
+const addScreenSahreNode = (stream) => {
+  const screenShareContainer = document.getElementById("screenshare-container");
+  let screenShareNode = document.getElementById("screenshare");
+
+  if (screenShareNode) {
+    return alert("There is alread a particiapnt sharing their screen!");
+  }
+  screenShareNode = document.createElement("video");
+  screenShareNode.autoplay = "autoplay";
+  navigator.attachMediaStream(screenShareNode, stream);
+
+  screenShareContainer.appendChild(screenShareNode);
+};
+
+const removeScreenShareNode = () => {
+  const screenShareNode = document.getElementById("screenshare");
+
+  if (screenShareNode) {
+    screenShareNode.srcObject = null; // Prevent memory leak in Chrome
+    screenShareNode.parentNode.removeChild(screenShareNode);
   }
 };
